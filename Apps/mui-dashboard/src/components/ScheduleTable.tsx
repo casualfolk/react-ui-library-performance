@@ -17,6 +17,11 @@ import {
   DialogActions,
   Button,
   TableContainer,
+  Card,
+  CardContent,
+  CardActions,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -29,8 +34,55 @@ interface ScheduleTableProps {
   onDelete: (id: number) => void;
 }
 
+// Mobile card view for each course row
+function CourseCard({ course, onEdit, onDelete }: { course: Course; onEdit: () => void; onDelete: () => void }) {
+  return (
+    <Card variant="outlined" sx={{ mb: 1.5 }}>
+      <CardContent sx={{ pb: 0 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 0.5 }}>
+          <Box>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>
+              {course.courseName}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {course.courseCode} · Class {course.class}
+            </Typography>
+          </Box>
+          <Chip
+            label={course.status}
+            color={course.status === 'Scheduled' ? 'success' : 'warning'}
+            size="small"
+          />
+        </Box>
+
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 1 }}>
+          <Typography variant="body2">📅 {course.day}</Typography>
+          <Typography variant="body2">⏰ {course.startTime} – {course.endTime}</Typography>
+          <Typography variant="body2">🏛 {course.room}</Typography>
+          <Typography variant="body2">👤 {course.lecturer}</Typography>
+          <Typography variant="body2">📘 Sem {course.semester} · {course.credits} SKS</Typography>
+        </Box>
+      </CardContent>
+      <CardActions sx={{ pt: 0, justifyContent: 'flex-end' }}>
+        <Tooltip title="Edit">
+          <IconButton size="small" color="primary" onClick={onEdit}>
+            <EditIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Delete">
+          <IconButton size="small" color="error" onClick={onDelete}>
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+      </CardActions>
+    </Card>
+  );
+}
+
 export default function ScheduleTable({ courses, onEdit, onDelete }: ScheduleTableProps) {
   const [deleteTarget, setDeleteTarget] = useState<Course | null>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   const confirmDelete = () => {
     if (deleteTarget) {
@@ -41,7 +93,7 @@ export default function ScheduleTable({ courses, onEdit, onDelete }: ScheduleTab
 
   return (
     <>
-      <Paper elevation={2} sx={{ p: 3 }}>
+      <Paper elevation={2} sx={{ p: { xs: 2, md: 3 } }}>
         <Box
           sx={{
             display: 'flex',
@@ -54,37 +106,52 @@ export default function ScheduleTable({ courses, onEdit, onDelete }: ScheduleTab
           <Chip label={`${courses.length} Records`} color="primary" variant="outlined" />
         </Box>
 
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell><strong>Code</strong></TableCell>
-                <TableCell><strong>Course</strong></TableCell>
-                <TableCell><strong>Day</strong></TableCell>
-                <TableCell><strong>Time</strong></TableCell>
-                <TableCell><strong>Room</strong></TableCell>
-                <TableCell><strong>Lecturer</strong></TableCell>
-                <TableCell><strong>Semester</strong></TableCell>
-                <TableCell><strong>SKS</strong></TableCell>
-                <TableCell><strong>Status</strong></TableCell>
-                <TableCell align="center"><strong>Actions</strong></TableCell>
-              </TableRow>
-            </TableHead>
+        {courses.length === 0 && (
+          <Typography align="center" sx={{ py: 4, color: 'text.secondary' }}>
+            No courses found.
+          </Typography>
+        )}
 
-            <TableBody>
-              {courses.length === 0 ? (
+        {/* Mobile: Card layout */}
+        {isMobile && courses.length > 0 && (
+          <Box>
+            {courses.map((course) => (
+              <CourseCard
+                key={course.id}
+                course={course}
+                onEdit={() => onEdit(course)}
+                onDelete={() => setDeleteTarget(course)}
+              />
+            ))}
+          </Box>
+        )}
+
+        {/* Desktop: Table layout */}
+        {!isMobile && courses.length > 0 && (
+          <TableContainer>
+            <Table size="small">
+              <TableHead>
                 <TableRow>
-                  <TableCell colSpan={10} align="center" sx={{ py: 4, color: 'text.secondary' }}>
-                    No courses found.
-                  </TableCell>
+                  <TableCell><strong>Code</strong></TableCell>
+                  <TableCell><strong>Course</strong></TableCell>
+                  <TableCell><strong>Day</strong></TableCell>
+                  <TableCell><strong>Time</strong></TableCell>
+                  <TableCell><strong>Room</strong></TableCell>
+                  <TableCell><strong>Lecturer</strong></TableCell>
+                  <TableCell><strong>Sem</strong></TableCell>
+                  <TableCell><strong>SKS</strong></TableCell>
+                  <TableCell><strong>Status</strong></TableCell>
+                  <TableCell align="center"><strong>Actions</strong></TableCell>
                 </TableRow>
-              ) : (
-                courses.map((course) => (
+              </TableHead>
+
+              <TableBody>
+                {courses.map((course) => (
                   <TableRow key={course.id} hover>
                     <TableCell>{course.courseCode}</TableCell>
                     <TableCell>{course.courseName}</TableCell>
                     <TableCell>{course.day}</TableCell>
-                    <TableCell>{course.startTime} – {course.endTime}</TableCell>
+                    <TableCell sx={{ whiteSpace: 'nowrap' }}>{course.startTime} – {course.endTime}</TableCell>
                     <TableCell>{course.room}</TableCell>
                     <TableCell>{course.lecturer}</TableCell>
                     <TableCell>{course.semester}</TableCell>
@@ -111,14 +178,14 @@ export default function ScheduleTable({ courses, onEdit, onDelete }: ScheduleTab
                       </Box>
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Paper>
 
-      {/* Delete Confirmation Dialog */}
+      {/* Delete Confirmation */}
       <Dialog open={!!deleteTarget} onClose={() => setDeleteTarget(null)}>
         <DialogTitle>Delete Course</DialogTitle>
         <DialogContent>

@@ -38,6 +38,11 @@ const emptyForm: Omit<Course, 'id'> = {
   status: 'Scheduled',
 };
 
+// Shared slotProps for all outlined TextFields — forces label to always float correctly
+const outlinedSlotProps = {
+  inputLabel: { shrink: true },
+};
+
 export default function CourseDialog({ open, onClose, onSubmit, initialData }: CourseDialogProps) {
   const [form, setForm] = useState<Omit<Course, 'id'> | Course>(emptyForm);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -95,6 +100,7 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
 
       <DialogContent dividers>
         <Grid container spacing={2} sx={{ pt: 1 }} columns={12}>
+
           {/* Course Code */}
           <Grid size={{ xs: 12, sm: 4 }}>
             <TextField
@@ -103,8 +109,8 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.courseCode}
               onChange={(e) => handleChange('courseCode', e.target.value)}
               error={!!errors.courseCode}
-              helperText={errors.courseCode}
-              placeholder="e.g. CS201"
+              helperText={errors.courseCode || ' '}
+              slotProps={outlinedSlotProps}
             />
           </Grid>
 
@@ -116,8 +122,8 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.courseName}
               onChange={(e) => handleChange('courseName', e.target.value)}
               error={!!errors.courseName}
-              helperText={errors.courseName}
-              placeholder="e.g. Algorithms"
+              helperText={errors.courseName || ' '}
+              slotProps={outlinedSlotProps}
             />
           </Grid>
 
@@ -129,12 +135,12 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.lecturer}
               onChange={(e) => handleChange('lecturer', e.target.value)}
               error={!!errors.lecturer}
-              helperText={errors.lecturer}
-              placeholder="e.g. Dr. John Doe"
+              helperText={errors.lecturer || ' '}
+              slotProps={outlinedSlotProps}
             />
           </Grid>
 
-          {/* Room */}
+          {/* Ruangan */}
           <Grid size={{ xs: 12, sm: 3 }}>
             <TextField
               fullWidth
@@ -142,8 +148,8 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.room}
               onChange={(e) => handleChange('room', e.target.value)}
               error={!!errors.room}
-              helperText={errors.room}
-              placeholder="e.g. B01"
+              helperText={errors.room || ' '}
+              slotProps={outlinedSlotProps}
             />
           </Grid>
 
@@ -155,8 +161,8 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.class}
               onChange={(e) => handleChange('class', e.target.value)}
               error={!!errors.class}
-              helperText={errors.class}
-              placeholder="e.g. A"
+              helperText={errors.class || ' '}
+              slotProps={outlinedSlotProps}
             />
           </Grid>
 
@@ -169,7 +175,8 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.day}
               onChange={(e) => handleChange('day', e.target.value)}
               error={!!errors.day}
-              helperText={errors.day}
+              helperText={errors.day || ' '}
+              slotProps={outlinedSlotProps}
             >
               {DAYS.map((d) => (
                 <MenuItem key={d} value={d}>{d}</MenuItem>
@@ -186,7 +193,8 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.startTime}
               onChange={(e) => handleChange('startTime', e.target.value)}
               error={!!errors.startTime}
-              helperText={errors.startTime}
+              helperText={errors.startTime || ' '}
+              slotProps={outlinedSlotProps}
             >
               {TIME_SLOTS.map((t) => (
                 <MenuItem key={t} value={t}>{t}</MenuItem>
@@ -203,7 +211,8 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.endTime}
               onChange={(e) => handleChange('endTime', e.target.value)}
               error={!!errors.endTime}
-              helperText={errors.endTime}
+              helperText={errors.endTime || ' '}
+              slotProps={outlinedSlotProps}
             >
               {TIME_SLOTS.map((t) => (
                 <MenuItem key={t} value={t}>{t}</MenuItem>
@@ -220,8 +229,11 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.semester}
               onChange={(e) => handleChange('semester', Number(e.target.value))}
               error={!!errors.semester}
-              helperText={errors.semester}
-              slotProps={{ htmlInput: { min: 1, max: 8 } }}
+              helperText={errors.semester || ' '}
+              slotProps={{
+                inputLabel: { shrink: true },
+                htmlInput: { min: 1, max: 8 },
+              }}
             />
           </Grid>
 
@@ -234,8 +246,11 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               value={form.credits}
               onChange={(e) => handleChange('credits', Number(e.target.value))}
               error={!!errors.credits}
-              helperText={errors.credits}
-              slotProps={{ htmlInput: { min: 1, max: 6 } }}
+              helperText={errors.credits || ' '}
+              slotProps={{
+                inputLabel: { shrink: true },
+                htmlInput: { min: 1, max: 6 },
+              }}
             />
           </Grid>
 
@@ -247,12 +262,15 @@ export default function CourseDialog({ open, onClose, onSubmit, initialData }: C
               label="Status"
               value={form.status}
               onChange={(e) => handleChange('status', e.target.value)}
+              helperText=" "
+              slotProps={outlinedSlotProps}
             >
               {STATUSES.map((s) => (
                 <MenuItem key={s} value={s}>{s}</MenuItem>
               ))}
             </TextField>
           </Grid>
+
         </Grid>
       </DialogContent>
 
