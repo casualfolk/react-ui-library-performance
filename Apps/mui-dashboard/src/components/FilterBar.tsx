@@ -1,6 +1,24 @@
-import { Box, TextField, MenuItem, Button, Paper } from '@mui/material';
+import { Box, TextField, MenuItem, Button, Paper, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import AddIcon from '@mui/icons-material/Add';
 
-export default function FilterBar() {
+interface FilterBarProps {
+  searchQuery: string;
+  onSearchChange: (value: string) => void;
+  dayFilter: string;
+  onDayFilterChange: (value: string) => void;
+  onAddClick: () => void;
+}
+
+const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+export default function FilterBar({
+  searchQuery,
+  onSearchChange,
+  dayFilter,
+  onDayFilterChange,
+  onAddClick,
+}: FilterBarProps) {
   return (
     <Paper elevation={2} sx={{ p: 3, mb: 4 }}>
       <Box
@@ -11,18 +29,45 @@ export default function FilterBar() {
           alignItems: 'center',
         }}
       >
-        <TextField fullWidth label="Search course" variant="outlined" />
+        <TextField
+          fullWidth
+          label="Search course, lecturer..."
+          variant="outlined"
+          value={searchQuery}
+          onChange={(e) => onSearchChange(e.target.value)}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              ),
+            },
+          }}
+        />
 
-        <TextField select fullWidth label="Filter by day" defaultValue="">
+        <TextField
+          select
+          fullWidth
+          label="Filter by day"
+          value={dayFilter}
+          onChange={(e) => onDayFilterChange(e.target.value)}
+        >
           <MenuItem value="">All Days</MenuItem>
-          <MenuItem value="Monday">Monday</MenuItem>
-          <MenuItem value="Tuesday">Tuesday</MenuItem>
-          <MenuItem value="Wednesday">Wednesday</MenuItem>
-          <MenuItem value="Thursday">Thursday</MenuItem>
-          <MenuItem value="Friday">Friday</MenuItem>
+          {DAYS.map((day) => (
+            <MenuItem key={day} value={day}>
+              {day}
+            </MenuItem>
+          ))}
         </TextField>
 
-        <Button variant="contained" fullWidth sx={{ height: '56px' }}>
+        <Button
+          variant="contained"
+          fullWidth
+          sx={{ height: '56px', fontWeight: 600 }}
+          startIcon={<AddIcon />}
+          onClick={onAddClick}
+        >
           Add Schedule
         </Button>
       </Box>

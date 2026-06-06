@@ -1,12 +1,16 @@
 export type CourseStatus = 'Active' | 'Pending' | 'Completed';
 
-export interface Course {
+export type Course = {
   id: number;
-  code: string;
-  name: string;
-  day: string;
-  time: string;
-  room: string;
+  courseCode: string;
+  courseName: string;
   lecturer: string;
-  status: CourseStatus;
-}
+  day: string;
+  startTime: string;
+  endTime: string;
+  room: string;
+  class: string;
+  semester: number;
+  credits: number;
+  status: string;
+};
