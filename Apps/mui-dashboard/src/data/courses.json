@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "code": "CS101",
+    "name": "Data Structures",
+    "day": "Monday",
+    "time": "08:00 - 09:40",
+    "room": "A201",
+    "lecturer": "Dr. Ahmad",
+    "status": "Active"
+  },
+  {
+    "id": 2,
+    "code": "CS202",
+    "name": "Web Programming",
+    "day": "Tuesday",
+    "time": "10:00 - 11:40",
+    "room": "B105",
+    "lecturer": "Ms. Rina",
+    "status": "Active"
+  },
+  {
+    "id": 3,
+    "code": "CS303",
+    "name": "Software Engineering",
+    "day": "Wednesday",
+    "time": "13:00 - 14:40",
+    "room": "C301",
+    "lecturer": "Mr. Budi",
+    "status": "Pending"
+  },
+  {
+    "id": 4,
+    "code": "CS404",
+    "name": "Database Systems",
+    "day": "Thursday",
+    "time": "09:00 - 10:40",
+    "room": "A105",
+    "lecturer": "Dr. Sinta",
+    "status": "Active"
+  },
+  {
+    "id": 5,
+    "code": "CS505",
+    "name": "Computer Networks",
+    "day": "Friday",
+    "time": "14:00 - 15:40",
+    "room": "B202",
+    "lecturer": "Mr. Farhan",
+    "status": "Completed"
+  },
+  {
+    "id": 6,
+    "code": "CS606",
+    "name": "Operating Systems",
+    "day": "Monday",
+    "time": "10:00 - 11:40",
+    "room": "C204",
+    "lecturer": "Ms. Anisa",
+    "status": "Active"
+  }
+]
